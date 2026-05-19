@@ -1,30 +1,133 @@
-# Real-time Leaderboard System
+<img width="1080" height="2340" alt="Leaderboard" src="https://github.com/user-attachments/assets/46959fde-89ee-43da-8b81-5c8a46940589" />
+# Realtime Leaderboard System
 
-A production-grade Android application demonstrating a real-time leaderboard with a modular architecture.
+A scalable realtime gaming leaderboard system built using modern Android development practices, Clean Architecture, MVVM, Jetpack Compose, Kotlin Coroutines, Flow, and multi-module architecture.
 
-## 🏗 Architecture
-The project follows **Clean Architecture** with **MVVM** and is split into 4 modules:
-- **:app**: Entry point and Navigation.
-- **:leaderboard**: UI Layer (Composables, ViewModels, UseCases).
-- **:score-engine**: Pure Kotlin module simulating real-time score generation (UI-agnostic).
-- **:core**: Shared components, Dagger Hilt DI, and Domain Utilities.
+---
 
-## 🚀 Key Features
-- **Real-time Updates**: Powered by Kotlin Coroutines and Flows.
-- **Competition Ranking**: Implements "1224" ranking (ties get same rank, next rank skipped).
-- **Smooth UI**: Uses Compose `animateItem` for rank transitions and `AnimatedContent` for score updates.
-- **UI-Agnostic Engine**: The score generator is isolated from the UI, making it highly testable and reusable.
+# 🚀 Features
 
-## 🧠 Leadership & Decisions
-- **Module Splitting**: Done to ensure separation of concerns. The engine can be replaced by a WebSocket implementation without touching the UI.
-- **Ranking Logic**: Placed in the Domain layer (`core` module) to keep ViewModels thin and logic centralized.
-- **Performance**: Used `key` in LazyColumn to prevent unnecessary recompositions and flickering.
+- Realtime leaderboard updates
+- Random score generation engine
+- Dynamic ranking system
+- Score increase-only logic
+- Multi-module clean architecture
+- Reactive UI using StateFlow
+- Dependency Injection using Hilt
+- Modern Jetpack Compose UI
+- Scalable and maintainable architecture
 
-## 🛠 Tech Stack
-- Kotlin, Coroutines, Flow
+---
+
+# 🏗️ Architecture
+
+The project follows Clean Architecture principles with MVVM and modularization.
+
+## Modules
+
+### :app
+Main application module responsible for app startup, navigation setup, dependency injection initialization, and connecting all feature modules together.
+
+### :leaderboard
+Contains the leaderboard presentation layer including:
+- Jetpack Compose UI
+- ViewModels
+- UI State Management
+- UseCases
+- Leaderboard interactions
+- Realtime ranking display
+
+### :score-engine
+Pure Kotlin business logic module responsible for:
+- Realtime score simulation
+- Random score generation
+- Ranking algorithms
+- Score processing logic
+- Flow-based realtime data streaming
+
+This module is completely UI-independent.
+
+### :core
+Shared foundational module containing:
+- Dagger Hilt setup
+- Shared utilities
+- Base classes
+- Common Compose components
+- Extensions
+- Coroutine dispatchers
+- Shared models
+- Domain utilities
+
+---
+
+# 🧠 Leadership & Engineering Decisions
+
+## Why Multi-Module Architecture?
+The application uses modularization to improve:
+- Scalability
+- Team collaboration
+- Build performance
+- Code maintainability
+- Separation of concerns
+
+## Why MVVM?
+MVVM provides:
+- Clear UI separation
+- Better state management
+- Easier testing
+- Lifecycle-aware architecture
+
+## Why StateFlow?
+StateFlow was chosen for:
+- Reactive UI updates
+- Lifecycle awareness
+- Efficient state handling
+- Realtime leaderboard updates
+
+## Why Clean Architecture?
+Clean Architecture helps:
+- Keep business logic independent
+- Improve testability
+- Reduce coupling
+- Increase long-term maintainability
+
+---
+
+# 🛠️ Tech Stack
+
+- Kotlin
 - Jetpack Compose
-- Dagger Hilt (DI)
-- Architecture Components (ViewModel, StateFlow)
+- MVVM Architecture
+- Clean Architecture
+- Kotlin Coroutines
+- StateFlow / Flow
+- Dagger Hilt
+- Multi-Module Architecture
 
-## 🧪 Testing
-- Unit tests included for `RankingCalculator` to ensure core business rules are always correct.
+---
+
+# 📸 Screenshots
+
+(Add screenshots here)
+
+---
+
+# 📦 Deliverables
+
+✅ GitHub repository with complete source code  
+✅ Architecture & Leadership documentation included
+
+---
+
+# ▶️ How to Run
+
+1. Clone repository
+2. Open in Android Studio
+3. Sync Gradle
+4. Run the app
+
+---
+
+# 👨‍💻 Author
+
+Amar
