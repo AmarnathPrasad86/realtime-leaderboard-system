@@ -1,3 +1,4 @@
+<img width="1080" height="2340" alt="Leaderboard" src="https://github.com/user-attachments/assets/46959fde-89ee-43da-8b81-5c8a46940589" />
 # Realtime Leaderboard System
 
 A scalable realtime gaming leaderboard system built using modern Android development practices, Clean Architecture, MVVM, Jetpack Compose, Kotlin Coroutines, Flow, and multi-module architecture.
