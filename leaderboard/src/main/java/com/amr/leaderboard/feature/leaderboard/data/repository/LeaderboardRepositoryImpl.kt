@@ -19,22 +19,16 @@ class LeaderboardRepositoryImpl @Inject constructor(
     @ApplicationScope private val scope: CoroutineScope
 ) : LeaderboardRepository {
 
-    /**
-     * Consumes scores from the engine, groups them by user, 
-     * takes the latest cumulative score, and applies ranking.
-     */
     override val leaderboard: StateFlow<List<LeaderboardEntry>> = scoreRepository.getAllScores()
         .map { scores ->
             val unrankedEntries = scores.groupBy { it.userId }
                 .map { (userId, userScores) ->
-                    // Since engine provides the total running score in each update,
-                    // we take the most recent score entry for that user.
                     val latestEntry = userScores.maxByOrNull { it.timestamp }
                     val totalScore = latestEntry?.points ?: 0L
                     
                     LeaderboardEntry(
                         userId = userId,
-                        username = "User $userId",
+                        username = if (userId == "me") "Amarnath" else "Player $userId",
                         totalScore = totalScore,
                         rank = 0
                     )

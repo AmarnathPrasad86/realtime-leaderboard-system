@@ -13,16 +13,11 @@ import com.amr.leaderboard.navigation.NavGraph
 import com.amr.leaderboard.ui.theme.LeaderboardTheme
 import dagger.hilt.android.AndroidEntryPoint
 
-/**
- * Main entry point for the application.
- * Annotated with @AndroidEntryPoint to enable Hilt dependency injection.
- */
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        // Enable edge-to-edge display//
         enableEdgeToEdge()
         
         setContent {
@@ -32,11 +27,9 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
-                    // Set up the Navigation Graph
                     NavGraph(
                         navController = navController,
                         modifier = Modifier.padding(innerPadding)
-
                     )
                 }
             }

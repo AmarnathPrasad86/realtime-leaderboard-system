@@ -16,7 +16,8 @@ class FakeGameEngine @Inject constructor(
 ) : GameEngine {
 
     private val userScores = mutableMapOf<String, Long>()
-    private val userIds = listOf("1", "2", "3", "4", "5")
+    // Including "me" for Amarnath and 4 others to make total 5 users
+    private val userIds = listOf("me", "2", "3", "4", "5")
 
     override fun startScoring(): Flow<Score> = flow {
         while (true) {

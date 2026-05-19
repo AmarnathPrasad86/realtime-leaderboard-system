@@ -1,194 +1,130 @@
 package com.amr.leaderboard.feature.leaderboard.presentation.component
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Face2
+import androidx.compose.material.icons.filled.Face3
+import androidx.compose.material.icons.filled.Face4
+import androidx.compose.material.icons.filled.Face5
+import androidx.compose.material.icons.filled.Face6
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.amr.leaderboard.feature.leaderboard.domain.model.LeaderboardEntry
-import kotlinx.coroutines.delay
 import java.text.NumberFormat
 import java.util.Locale
 
 @Composable
 fun LeaderboardItem(
     entry: LeaderboardEntry,
-    isSelected: Boolean,
-    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val numberFormatter = remember { NumberFormat.getNumberInstance(Locale.US) }
 
-    val (cardColor, rankBadgeColor) = when (entry.rank) {
-        1 -> Color(0xFFFFF8E1) to Color(0xFFFFD700)
-        2 -> Color(0xFFF5F5F5) to Color(0xFFC0C0C0)
-        3 -> Color(0xFFFFF3E0) to Color(0xFFCD7F32)
-        else -> MaterialTheme.colorScheme.surface to MaterialTheme.colorScheme.outlineVariant
+    // Sequence: User Icon -> Position -> Name -> Points
+
+    // 1. Selection of Avatars
+    val avatars = listOf(Icons.Default.Face, Icons.Default.Face2, Icons.Default.Face3, Icons.Default.Face4, Icons.Default.Face5, Icons.Default.Face6)
+    val avatarIcon = remember(entry.userId) {
+        if (entry.userId == "me") Icons.Default.Person 
+        else avatars[entry.userId.hashCode().coerceAtLeast(0) % avatars.size]
     }
 
-    var isUpdating by remember { mutableStateOf(false) }
-    LaunchedEffect(entry.totalScore) {
-        isUpdating = true
-        delay(400)
-        isUpdating = false
+    val avatarColor = remember(entry.userId) {
+        val colors = listOf(Color(0xFFE91E63), Color(0xFF4CAF50), Color(0xFF2196F3), Color(0xFF9C27B0), Color(0xFFFF9800))
+        colors[entry.userId.hashCode().coerceAtLeast(0) % colors.size]
     }
 
-    val scale by animateFloatAsState(
-        targetValue = if (isUpdating) 1.03f else if (isSelected) 1.02f else 1f,
-        animationSpec = tween(300), label = "scale"
-    )
+    val rankTextColor = when (entry.rank) {
+        1 -> Color(0xFFFFD700)
+        2 -> Color(0xFFC0C0C0)
+        3 -> Color(0xFFCD7F32)
+        else -> Color.White.copy(alpha = 0.6f)
+    }
 
-    val glowColor by animateColorAsState(
-        targetValue = if (isUpdating) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f) 
-                      else if (isSelected) MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
-                      else cardColor,
-        animationSpec = tween(300), label = "glow"
-    )
-
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp)
-            .graphicsLayer(scaleX = scale, scaleY = scale)
-            .clip(RoundedCornerShape(16.dp))
-            .clickable { onClick() }
-            .border(
-                width = if (isSelected) 2.dp else 1.dp,
-                color = if (isSelected) MaterialTheme.colorScheme.primary 
-                        else if (isUpdating) MaterialTheme.colorScheme.primary.copy(alpha = 0.3f) 
-                        else Color.Transparent,
-                shape = RoundedCornerShape(16.dp)
-            ),
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = if (isSelected) 4.dp else 2.dp),
-        colors = CardDefaults.cardColors(containerColor = glowColor)
-    ) {
-        Column {
-            Row(
+    Column(modifier = modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 20.dp, vertical = 14.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // A. User Icon
+            Box(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 14.dp)
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                    .size(42.dp)
+                    .clip(CircleShape)
+                    .background(avatarColor.copy(alpha = 0.15f))
+                    .padding(8.dp),
+                contentAlignment = Alignment.Center
             ) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .size(42.dp)
-                        .clip(CircleShape)
-                        .background(rankBadgeColor.copy(alpha = 0.2f))
-                        .border(1.dp, rankBadgeColor.copy(alpha = 0.5f), CircleShape)
-                ) {
-                    Text(
-                        text = when(entry.rank) {
-                            1 -> "🥇"
-                            2 -> "🥈"
-                            3 -> "🥉"
-                            else -> entry.rank.toString()
-                        },
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = if (entry.rank <= 3) rankBadgeColor else MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-
-                Spacer(Modifier.width(16.dp))
-
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = entry.username,
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = "Player ID: ${entry.userId}",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-
-                AnimatedContent(
-                    targetState = entry.totalScore,
-                    transitionSpec = {
-                        fadeIn(animationSpec = tween(400)).togetherWith(fadeOut(animationSpec = tween(200)))
-                    },
-                    label = "ScoreAnim"
-                ) { targetScore ->
-                    Text(
-                        text = numberFormatter.format(targetScore),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary,
-                        textAlign = TextAlign.End,
-                        modifier = Modifier.width(90.dp)
-                    )
-                }
+                Icon(
+                    imageVector = avatarIcon,
+                    contentDescription = null,
+                    tint = avatarColor
+                )
             }
 
-            AnimatedVisibility(
-                visible = isSelected,
-                enter = fadeIn() + expandVertically(),
-                exit = fadeOut() + shrinkVertically()
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 74.dp, end = 16.dp, bottom = 12.dp)
-                ) {
-                    HorizontalDivider(
-                        modifier = Modifier.padding(bottom = 8.dp),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f)
-                    )
+            Spacer(Modifier.width(16.dp))
+
+            // B. Position (Rank)
+            Text(
+                text = "${entry.rank}.",
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Black, fontSize = 17.sp),
+                color = rankTextColor,
+                modifier = Modifier.width(36.dp)
+            )
+
+            // C. Name
+            Text(
+                text = entry.username,
+                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold, letterSpacing = 0.5.sp),
+                color = Color.White,
+                modifier = Modifier.weight(1f)
+            )
+
+            // D. Points
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = Icons.Default.EmojiEvents,
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp),
+                    tint = Color(0xFFFFD700)
+                )
+                Spacer(Modifier.width(6.dp))
+                AnimatedContent(
+                    targetState = entry.totalScore,
+                    transitionSpec = { fadeIn(tween(400)).togetherWith(fadeOut(tween(200))) },
+                    label = "Score"
+                ) { score ->
                     Text(
-                        text = "Realtime Stats:",
-                        style = MaterialTheme.typography.labelMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Text(
-                        text = "• Connection verified & active",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        text = numberFormatter.format(score),
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                        color = Color.White
                     )
                 }
             }
         }
+        HorizontalDivider(modifier = Modifier.padding(horizontal = 20.dp), color = Color.White.copy(alpha = 0.05f))
     }
 }
