@@ -1,3 +1,4 @@
+<img width="1080" height="2340" alt="Leaderboard" src="https://github.com/user-attachments/assets/4000dcf2-b941-4ba3-ab94-325e8423ae15" />
 # Real-time Leaderboard System
 
 A production-grade Android application demonstrating a real-time leaderboard with a modular architecture.
